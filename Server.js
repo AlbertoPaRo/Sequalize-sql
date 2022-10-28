@@ -5,10 +5,10 @@ const XLSX = require("xlsx");
 async function executeQueries(queries = []) {
   // config for your database
   const config = {
-    user: "prueba1",
-    password: "12345",
-    server: "127.0.0.1",
-    database: "inventario",
+    user: "tableau",
+    password: "tableau",
+    server: "192.168.11.7",
+    database: "StageTableau",
     options: {
       encrypt: false,
       trustServerCertificate: true,

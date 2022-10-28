@@ -1,2 +1,2 @@
 -- SQLBook: Code
-select * from productos where existencia >= 120;
+ SELECT * FROM [StageTableau].[dbo].[TA_DatosTraficoConversion]  where Gestion = 2022 and semana =41;
