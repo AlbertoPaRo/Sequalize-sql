@@ -1,104 +1,67 @@
-const sql = require("mssql");
-const fs = require("node:fs");
-const XLSX = require("xlsx");
+const dotenv = require("dotenv");
+const info = require("./info.json");
+const nodemailer = require("nodemailer");
+dotenv.config();
 
-async function executeQueries(queries = []) {
-  // config for your database
-  const config = {
-    user: "tableau",
-    password: "tableau",
-    server: "192.168.11.7",
-    database: "StageTableau",
-    options: {
-      encrypt: false,
-      trustServerCertificate: true,
+const {
+  convertDataToExcel,
+  getConfigMSSQL,
+  getDataFromQueries,
+  getQuery,
+} = require("./utils");
+
+async function executeQueries() {
+  const config = getConfigMSSQL();
+  try {
+    const queriesProms = info.map(async (item) => {
+      const queryString = await getQuery(item.queryPath);
+      return [item.sheetName, queryString];
+    });
+    const queriesResult = await Promise.allSettled(queriesProms);
+    const queries = queriesResult.map((e) => e.value);
+    const dataProms = await getDataFromQueries(config, queries);
+    const dataResult = await Promise.allSettled(dataProms);
+    const data = dataResult.map((e) => e.value);
+    console.log(data);
+    await convertDataToExcel(data, "./hoja_sql.xls");
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function sendEmail() {
+  const transport = nodemailer.createTransport({
+    host: "smtp-mail.outlook.com",
+    secureConnection: false,
+    port: 587,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
-  };
-
-  const getQueries = () => {
-    return new Promise((resolve, reject) => {
-      let results;
-      sql.connect(config, (err) => {
-        if (err) reject(err);
-        const request = new sql.Request();
-        results = queries.map((queryString) => {
-          return new Promise((resolve, reject) => {
-            request.query(queryString, (err, data) => {
-              if (err) reject(err);
-
-              resolve(data);
-            });
-          });
-        });
-        resolve(results);
-      });
-    });
-  };
-  const queriesProms = await getQueries();
-  const data = await Promise.allSettled(queriesProms);
-  const dataExcelProms = data
-    .filter((e) => e?.value?.recordset?.length)
-    .map(async (e, i) => {
-      const nameExcel = (num, flag = true) =>
-        flag ? `hoja_${num}_${+new Date()}.xls` : `./${num}.xls`;
-      return convertDataToExcel(e.value.recordset, nameExcel(i));
-    });
-  await Promise.allSettled(dataExcelProms);
-  const dataJSON = JSON.stringify(data.map((e) => e.value));
-  const jsonName = `results_${+new Date()}.json`;
-  fs.writeFile(jsonName, dataJSON, (err) => {
-    if (err) throw err;
-    console.log("The file has been saved!");
+    tls: {
+      ciphers: "SSLv3",
+    },
   });
-}
 
-function convertDataToExcel(data, pathFileName) {
-  return new Promise((resolve, reject) => {
-    try {
-      const sheetName = "Test";
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-      XLSX.writeFile(workbook, pathFileName);
-      resolve(true);
-    } catch (err) {
-      reject(err);
-    }
+  const info = await transport.sendMail({
+    attachments: {
+      filename: "ReporteSemanal.xls",
+      path: "./hoja_sql.xls",
+    },
+    from: `"Rosa Chavez" <${process.env.EMAIL_USER}>`,
+    to: "alberto.padilla@tiendaamiga.com.bo",
+    subject: "Hello ✔",
+    text: "Hello world?",
   });
-}
 
-function readFiles(dirname, onFileContent, onError) {
-  fs.readdir(dirname, function (err, filenames) {
-    if (err) {
-      onError(err);
-      return;
-    }
-    filenames.forEach(function (filename) {
-      fs.readFile(dirname + filename, "utf-8", function (err, content) {
-        if (err) {
-          onError(err);
-          return;
-        }
-        onFileContent(filename, content);
-      });
-    });
-  });
+  console.log("Message sent: %s", info.messageId);
+
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }
 
 async function main() {
-  const queries = ["Select 42"];
-
-  readFiles(
-    "queries/",
-    function (filename, content) {
-      queries.push(content);
-    },
-    function (err) {
-      throw err;
-    }
-  );
-  await executeQueries(queries);
-  await Promise.resolve().then(() => setTimeout(() => process.exit(0), 2000));
+  await executeQueries();
+  await sendEmail();
 }
 
-main();
+main().catch((err) => console.log(err));

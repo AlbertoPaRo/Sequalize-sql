@@ -1,0 +1,11 @@
+[
+  {
+    "sheetName": "Semana General",
+    "queryPath": "./queries/Semana_general.sql"
+  },
+
+  {
+    "sheetName": "Super Linea",
+    "queryPath": "./queries/Super_Linea.sql"
+  }
+]
