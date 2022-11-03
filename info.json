@@ -7,5 +7,9 @@
   {
     "sheetName": "Super Linea",
     "queryPath": "./queries/Super_Linea.sql"
+  },
+  {
+    "sheetName": "Semana Sucursal",
+    "queryPath": "./queries/Semana_Sucursal.sql"
   }
 ]

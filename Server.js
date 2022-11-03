@@ -42,6 +42,10 @@ async function sendEmail() {
       ciphers: "SSLv3",
     },
   });
+  // const maillist = [
+  //   "alberto.padilla@tiendaamiga.com",
+  //   "albertopadillaroj@gmail.com",
+  // ];
 
   const info = await transport.sendMail({
     attachments: {
@@ -49,7 +53,7 @@ async function sendEmail() {
       path: "./hoja_sql.xls",
     },
     from: `"Rosa Chavez" <${process.env.EMAIL_USER}>`,
-    to: "alberto.padilla@tiendaamiga.com.bo",
+    to: ` <${process.env.EMAIL_DEST}> ,<${process.env.EMAIL_USER}>,<${process.env.EMAIL_DEST1}>,<${process.env.EMAIL_DEST2}>`,
     subject: "Reporte Semanal",
     text: "Buen dia estimado, se le adjunta el archivo de Reporte Semanal. saludos cordiales.",
   });
@@ -61,8 +65,8 @@ async function sendEmail() {
 
 async function main() {
   await executeQueries();
-  await Promise.resolve().then(() => setTimeout(() => process.exit(0), 5000));
   await sendEmail();
+  await Promise.resolve().then(() => setTimeout(() => process.exit(0), 5000));
 }
 
 main().catch((err) => console.log(err));
