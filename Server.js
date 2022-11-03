@@ -50,8 +50,8 @@ async function sendEmail() {
     },
     from: `"Rosa Chavez" <${process.env.EMAIL_USER}>`,
     to: "alberto.padilla@tiendaamiga.com.bo",
-    subject: "Hello ✔",
-    text: "Hello world?",
+    subject: "Reporte Semanal",
+    text: "Buen dia estimado, se le adjunta el archivo de Reporte Semanal. saludos cordiales.",
   });
 
   console.log("Message sent: %s", info.messageId);
@@ -61,6 +61,7 @@ async function sendEmail() {
 
 async function main() {
   await executeQueries();
+  await Promise.resolve().then(() => setTimeout(() => process.exit(0), 5000));
   await sendEmail();
 }
 

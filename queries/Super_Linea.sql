@@ -12,10 +12,10 @@ select dm.Gestion, dm.Semana, case
 from (
 select Gestion, Semana, Id_linea, sum(Meta)*0.87 Meta
 	from DM_MetasLineaGeneral
-	where  Gestion=DATEPART(year,getdate()-14) and Semana=DATEPART(week,getdate()-14)
+	where  Gestion=DATEPART(year,getdate()-21) and Semana=DATEPART(week,getdate()-21)
 	group by Id_linea, Semana, Gestion) as dm inner join
 	(select sum(Monto_real)*0.87 monto_vendido, ID_super_linea, Gestion, Semana
 	from TB_VISTA_COMERCIAL
-	where Gestion=DATEPART(year,getdate()-14) and Semana=DATEPART(week,getdate()-14)
+	where Gestion=DATEPART(year,getdate()-21) and Semana=DATEPART(week,getdate()-21)
 	group by ID_super_linea, Gestion, Semana) as tbvc on dm.Gestion=tbvc.Gestion and dm.Semana=tbvc.Semana and tbvc.ID_super_linea=dm.Id_linea
 	
