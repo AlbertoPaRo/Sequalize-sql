@@ -53,7 +53,7 @@ async function sendEmail() {
       path: "./hoja_sql.xls",
     },
     from: `"Rosa Chavez" <${process.env.EMAIL_USER}>`,
-    to: ` <${process.env.EMAIL_DEST}> ,<${process.env.EMAIL_USER}>,<${process.env.EMAIL_DEST1}>,<${process.env.EMAIL_DEST2}>`,
+    to: ` <${process.env.EMAIL_DEST}> ,<${process.env.EMAIL_USER}>`,
     subject: "Reporte Semanal",
     text: "Buen dia estimado, se le adjunta el archivo de Reporte Semanal. saludos cordiales.",
   });
