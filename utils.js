@@ -24,9 +24,9 @@ function convertDataToExcel(data, pathFileName) {
   return new Promise((resolve, reject) => {
     try {
       const workbook = XLSX.utils.book_new();
-      data.forEach((sheetItem) => {
-        const sheetName = sheetItem[0];
-        const worksheet = XLSX.utils.json_to_sheet(sheetItem[1].recordset);
+      data.forEach(([name, data]) => {
+        const sheetName = name;
+        const worksheet = XLSX.utils.json_to_sheet(data.recordset);
         XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
       });
       XLSX.writeFile(workbook, pathFileName);

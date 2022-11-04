@@ -42,10 +42,6 @@ async function sendEmail() {
       ciphers: "SSLv3",
     },
   });
-  // const maillist = [
-  //   "alberto.padilla@tiendaamiga.com",
-  //   "albertopadillaroj@gmail.com",
-  // ];
 
   const info = await transport.sendMail({
     attachments: {
