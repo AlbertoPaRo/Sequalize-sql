@@ -63,7 +63,7 @@ async function sendEmail() {
 
 async function main() {
   await executeQueries();
-  await sendEmail();
+  //  await sendEmail();
   await Promise.resolve().then(() => setTimeout(() => process.exit(0), 5000));
 }
 

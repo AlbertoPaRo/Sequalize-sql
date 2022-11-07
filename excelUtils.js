@@ -18,11 +18,13 @@ async function convertHandleDataToExcel(data, fileName) {
       sheet.columns = cols;
       sheet.addRows(values);
       const cellValue = getCellByName(sheet, columnsHeaders);
+      console.log(cellValue);
       levelPercentage(sheet, cellValue);
     });
     await workbook.xlsx.writeFile(fileName);
     return true;
   } catch (err) {
+    console.log(err, "hola");
     throw new Error(err);
   }
 }
