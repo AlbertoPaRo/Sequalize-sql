@@ -1,6 +1,6 @@
 const ExcelJS = require("exceljs");
 
-async function convertHandleDataToExcel(data, filename) {
+async function convertHandleDataToExcel(data, fileName) {
   try {
     const workbook = new ExcelJS.Workbook();
     data.forEach((element) => {
@@ -48,7 +48,7 @@ function levelPercentage(worksheet, cells) {
     col.eachCell(function (cell, rowNumber) {
       const model = cell._value.model;
       const value = model.value;
-      const color = getColor(value);
+      const color = getColor(+value);
       const addr = cell._address;
       const borderColor = "#000000".slice(1);
 
