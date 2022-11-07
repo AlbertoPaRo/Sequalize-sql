@@ -6,7 +6,7 @@ class ExcelHandle {
   addWorkSheet({ workbook, sheetName }) {
     if (!workbook) throw new Error("workbook not exists");
     const sheet = workbook.addWorksheet(sheetName);
-    return { sheet, workbook };
+    return { sheet };
   }
 
   createWorkBook() {
@@ -48,21 +48,6 @@ class ExcelHandle {
     return wb;
   }
 
-  //   getCellByName(worksheet, name) {
-  //     var match;
-  //     worksheet.eachRow(function (row) {
-  //         row.eachCell(function (cell) {
-  //             for (var i = 0; i < cell.names.length; i++) {
-  //                 if (cell.names[i] === name) {
-  //                     match = cell;
-  //                     break;
-  //                 }
-  //             }
-  //         });
-  //     });
-  //     return match;
-  // }
-
   getCellByName(worksheet, headers) {
     const result = [];
     const row = worksheet.getRow(1);
@@ -88,6 +73,59 @@ class ExcelHandle {
   }
 }
 
+class ReportExcelHandle extends ExcelHandle {
+  // eslint-disable-next-line no-useless-constructor
+  constructor() {
+    super();
+  }
+
+  levelPercentage(worksheet, cells) {
+    const result = {};
+    const getColor = (value) => {
+      if (value.toLowerCase() === "male") return "#ff0000";
+      if (value.toLowerCase() === "female") return "#00ff00";
+      return "#00ffff";
+
+      //  if(value>=100) return  "#3ed140"
+      //  if(value<100 && value>=79) return "#faed15"
+      //  return "#e53004"
+    };
+
+    cells.forEach((item) => {
+      const col = worksheet.getColumn(item._column._number);
+      col.eachCell(function (cell, rowNumber) {
+        const model = cell._value.model;
+        const value = model.value;
+        const color = getColor(value);
+        const addr = cell._address;
+        const borderColor = "#000000".slice(1);
+
+        const borderType = { style: "thin", color: { argb: borderColor } };
+
+        if (model.value !== item._column._header) {
+          result[item._column._header] ??= [];
+          result[item._column._header].push({ ...model });
+          worksheet.getCell(addr).fill = {
+            type: "pattern",
+            pattern: "darkVertical",
+            fgColor: { argb: color.slice(1) },
+          };
+
+          worksheet.getCell(addr).border = {
+            top: borderType,
+            left: borderType,
+            bottom: borderType,
+            right: borderType,
+          };
+        }
+      });
+    });
+    console.log(result);
+    return result;
+  }
+}
+
 module.exports = {
   ExcelHandle,
+  ReportExcelHandle,
 };

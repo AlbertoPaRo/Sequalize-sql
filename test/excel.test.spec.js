@@ -1,4 +1,4 @@
-const { ExcelHandle } = require("../src/ExcelHandle");
+const { ExcelHandle, ReportExcelHandle } = require("../src/ExcelHandle");
 const { Workbook } = require("exceljs");
 
 describe("Excel Handle suite test", () => {
@@ -103,5 +103,19 @@ describe("Excel Handle suite test", () => {
     const result = excelHandle.getCellByName(sheet, ["first_name", "email"]);
     console.log(result);
     expect(result).toBeTruthy();
+  });
+
+  it("get values by cell headers", () => {
+    const excelHandle = new ReportExcelHandle();
+    const wb = excelHandle.createWorkBook();
+    const { sheet } = excelHandle.addWorkSheet({
+      workbook: wb,
+      sheetName: "First Data",
+    });
+    const data = require("../Persons.json");
+    excelHandle.addRows(sheet, data);
+    const cells = excelHandle.getCellByName(sheet, ["gender", "email"]);
+    expect(excelHandle.levelPercentage(sheet, cells)).toBeTruthy();
+    expect(excelHandle.writeFile(wb, "./test3.xlsx"));
   });
 });
