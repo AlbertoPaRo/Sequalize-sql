@@ -8,11 +8,11 @@
   {
     "sheetName": "Super Linea",
     "queryPath": "./queries/Super_Linea.sql",
-    "columns" : ["Cumplimiento"]
+    "columns" : ["% Cumplimiento"]
   },
   {
     "sheetName": "Semana Sucursal",
     "queryPath": "./queries/Semana_Sucursal.sql",
-    "columns" : ["Cumplimiento Ventas(%)","Cumplimiento Trafico","Cumplimiento Conversion"]
+    "columns" : ["Cumplimiento Ventas (%)","Cumplimiento Trafico (%)","Cumplimiento Conversion (%)"]
   }
 ]

@@ -48,7 +48,7 @@ async function sendEmail() {
   const info = await transport.sendMail({
     attachments: {
       filename: "ReporteSemanal.xls",
-      path: "./hoja_sql.xls",
+      path: "./Resumen_Semanal.xlsx",
     },
     from: `"Rosa Chavez" <${process.env.EMAIL_USER}>`,
     to: ` <${process.env.EMAIL_DEST}> ,<${process.env.EMAIL_USER}>`,
@@ -63,7 +63,8 @@ async function sendEmail() {
 
 async function main() {
   await executeQueries();
-  //  await sendEmail();
+
+  await sendEmail();
   await Promise.resolve().then(() => setTimeout(() => process.exit(0), 5000));
 }
 
