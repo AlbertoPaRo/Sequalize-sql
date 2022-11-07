@@ -6,20 +6,22 @@ async function convertHandleDataToExcel(data, fileName) {
     data.forEach((element) => {
       const sheetName = element[0];
       const values = element[1].recordset;
-      const columnsHeaders = element[2];
-      const sheet = workbook.addWorksheet(sheetName);
-      const cols = Object.keys(values[0]).map((prop) => {
-        return {
-          header: prop,
-          key: prop,
-          width: 25,
-        };
-      });
-      sheet.columns = cols;
-      sheet.addRows(values);
-      const cellValue = getCellByName(sheet, columnsHeaders);
-      console.log(cellValue);
-      levelPercentage(sheet, cellValue);
+      if (values.length > 0) {
+        const columnsHeaders = element[2];
+        const sheet = workbook.addWorksheet(sheetName);
+        console.log(values);
+        const cols = Object.keys(values[0]).map((prop) => {
+          return {
+            header: prop,
+            key: prop,
+            width: 25,
+          };
+        });
+        sheet.columns = cols;
+        sheet.addRows(values);
+        const cellValue = getCellByName(sheet, columnsHeaders);
+        levelPercentage(sheet, cellValue);
+      }
     });
     await workbook.xlsx.writeFile(fileName);
     return true;
@@ -59,7 +61,7 @@ function levelPercentage(worksheet, cells) {
       if (model.value !== item._column._header) {
         worksheet.getCell(addr).fill = {
           type: "pattern",
-          pattern: "darkVertical",
+          pattern: "solid",
           fgColor: { argb: color.slice(1) },
         };
 

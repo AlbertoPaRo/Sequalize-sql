@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 dotenv.config();
 
 const {
-  convertDataToExcel,
+  // convertDataToExcel,
   getConfigMSSQL,
   getDataFromQueries,
   getQuery,
@@ -25,7 +25,7 @@ async function executeQueries() {
     const data = dataResult.map((e) => e.value);
     console.log(data);
     // await convertDataToExcel(data, "./hoja_sql.xls");
-    await convertHandleDataToExcel(data, "./Resumen_Semanal.xls");
+    await convertHandleDataToExcel(data, "./Resumen_Semanal.xlsx");
   } catch (e) {
     console.log(e);
   }

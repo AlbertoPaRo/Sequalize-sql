@@ -47,7 +47,7 @@ const getDataFromQueries = (config, queries) => {
         return new Promise((resolve, reject) => {
           request.query(queryString, (err, data) => {
             if (err) reject(err);
-
+            console.log(columns);
             resolve([sheetName, data, columns]);
           });
         });
