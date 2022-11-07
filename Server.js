@@ -9,13 +9,14 @@ const {
   getDataFromQueries,
   getQuery,
 } = require("./utils");
+const { convertHandleDataToExcel } = require("./excelUtils");
 
 async function executeQueries() {
   const config = getConfigMSSQL();
   try {
     const queriesProms = info.map(async (item) => {
       const queryString = await getQuery(item.queryPath);
-      return [item.sheetName, queryString];
+      return [item.sheetName, queryString, item.columns];
     });
     const queriesResult = await Promise.allSettled(queriesProms);
     const queries = queriesResult.map((e) => e.value);
@@ -23,7 +24,8 @@ async function executeQueries() {
     const dataResult = await Promise.allSettled(dataProms);
     const data = dataResult.map((e) => e.value);
     console.log(data);
-    await convertDataToExcel(data, "./hoja_sql.xls");
+    // await convertDataToExcel(data, "./hoja_sql.xls");
+    await convertHandleDataToExcel(data, "./Resumen_Semanal.xls");
   } catch (e) {
     console.log(e);
   }

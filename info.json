@@ -1,15 +1,18 @@
 [
   {
     "sheetName": "Semana General",
-    "queryPath": "./queries/Semana_general.sql"
+    "queryPath": "./queries/Semana_general.sql",
+    "columns" : ["% Logrado","% VTP Logrado"]
   },
 
   {
     "sheetName": "Super Linea",
-    "queryPath": "./queries/Super_Linea.sql"
+    "queryPath": "./queries/Super_Linea.sql",
+    "columns" : ["Cumplimiento"]
   },
   {
     "sheetName": "Semana Sucursal",
-    "queryPath": "./queries/Semana_Sucursal.sql"
+    "queryPath": "./queries/Semana_Sucursal.sql",
+    "columns" : ["Cumplimiento Ventas(%)","Cumplimiento Trafico","Cumplimiento Conversion"]
   }
 ]

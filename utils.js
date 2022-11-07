@@ -43,12 +43,12 @@ const getDataFromQueries = (config, queries) => {
     sql.connect(config, (err) => {
       if (err) reject(err);
       const request = new sql.Request();
-      results = queries.map(([sheetName, queryString]) => {
+      results = queries.map(([sheetName, queryString, columns]) => {
         return new Promise((resolve, reject) => {
           request.query(queryString, (err, data) => {
             if (err) reject(err);
 
-            resolve([sheetName, data]);
+            resolve([sheetName, data, columns]);
           });
         });
       });

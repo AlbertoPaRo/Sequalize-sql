@@ -8,7 +8,7 @@ select dm.Gestion, dm.Semana, case
 				when dm.Id_linea = 7 then 'OTRAS LINEAS'
 				when dm.Id_linea = 8 then 'SERVICIOS'
              
-            end Super_Linea, tbvc.monto_vendido, dm.Meta, ((tbvc.monto_vendido)/(dm.Meta)) Cumplimiento
+            end Super_Linea, tbvc.monto_vendido, dm.Meta, (((tbvc.monto_vendido)/(dm.Meta))*100) Cumplimiento
 from (
 select Gestion, Semana, Id_linea, sum(Meta)*0.87 Meta
 	from DM_MetasLineaGeneral
