@@ -24,7 +24,8 @@ async function executeQueries() {
     const dataResult = await Promise.allSettled(dataProms);
     const data = dataResult.map((e) => e.value);
     console.log(data);
-    // await convertDataToExcel(data, "./hoja_sql.xls");
+
+    // await convertDataToExcel(data, "./Resumen_Semanal.xlsx");
     await convertHandleDataToExcel(data, "./Resumen_Semanal.xlsx");
   } catch (e) {
     console.log(e);
@@ -51,7 +52,7 @@ async function sendEmail() {
       path: "./Resumen_Semanal.xlsx",
     },
     from: `"Rosa Chavez" <${process.env.EMAIL_USER}>`,
-    to: ` <${process.env.EMAIL_DEST}> ,<${process.env.EMAIL_USER}>`,
+    to: ` <${process.env.EMAIL_DEST}> ,<${process.env.EMAIL_USER}> ,<${process.env.EMAIL_DEST1}> ,<${process.env.EMAIL_DEST2}>`,
     subject: "Reporte Semanal",
     text: "Buen dia estimado, se le adjunta el archivo de Reporte Semanal. saludos cordiales.",
   });

@@ -1,5 +1,5 @@
 select vc.ID_Sucursal, vc.Gestion, vc.Semana, vc.NO_Sucursal, vc.Monto 'Monto de Venta', mtsuc.vmeta 'Meta de Venta',((vc.Monto/mtsuc.vmeta))*100 'Cumplimiento Ventas (%)' ,
-mstcvpt.M_Trafico Trafico, mstcvpt.M_Conversion 'Conversion (%)' ,  (tdtc.Cumplimiento)*100 'Cumplimiento Trafico (%)',(tdtc.CumpliminetoCv)*100 'Cumplimiento Conversion (%)' ,vc.Facturas 'Cantidad de Facturas',fcanu.v2 'anulados'
+mstcvpt.M_Trafico 'Meta Trafico', mstcvpt.M_Conversion 'Meta Conversion (%)' , case when tdtc.cod_sucursal  not in  (6) then  (tdtc.Cumplimiento)*100 else 0 end 'Cumplimiento Trafico (%)',case when tdtc.cod_sucursal  not in  (6) then  (tdtc.CumpliminetoCv)*100 else 0 end 'Cumplimiento Conversion (%)' ,vc.Facturas 'Cantidad de Facturas',fcanu.v2 'anulados'
 from
 (select sum(Monto_real)*0.87 Monto, Gestion, COUNT(DISTINCT NroDocumento) Facturas, Semana, case
                 when Sucursal = 'BR' then 1
@@ -33,9 +33,9 @@ from METAS_SEMANALES_TCVPT
 where M_Semana=DATEPART(week,getdate()-28) and M_Gestion=DATEPART(year,getdate()-28)
 group by M_IdSucursal, M_Trafico, M_Conversion, M_Gestion, M_Semana)
 as mstcvpt on vc.Gestion=mstcvpt.M_Gestion and vc.Semana=mstcvpt.M_Semana and vc.ID_Sucursal=M_IdSucursal
-inner join (select sum(CumplimientoConv) CumpliminetoCv, sum(Cumplimiento) Cumplimiento, semana,Gestion, cod_sucursal
+left outer join (select sum(CumplimientoConv) CumpliminetoCv, sum(Cumplimiento) Cumplimiento, semana,Gestion, cod_sucursal
 from TA_DatosTraficoConversion where semana=DATEPART(week,getdate()-28) and Gestion=DATEPART(year,getdate()-28) group by semana, Gestion,cod_sucursal) as tdtc on tdtc.semana=vc.Semana and tdtc.Gestion=vc.Gestion and tdtc.cod_sucursal=vc.ID_Sucursal
-inner join
+left outer join
 (select sum(Monto_real)*0.87 Monto, Gestion, COUNT(DISTINCT NroDocumento) Facturas, Semana, case
                 when Sucursal = 'BR' then 1
                 when Sucursal = 'CE' then 2
